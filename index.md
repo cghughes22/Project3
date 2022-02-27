@@ -5,7 +5,7 @@ In order to perform multivariate regression, we need to take a dataset and only 
 ### Gradient Boosting
 Gradient boosting utilizes a set of decision trees, each with a depth larger than 1, to predict a target label. Usually, these trees have their maximum number of leaves set between 8 and 32. 
 ### Extreme Gradient Boosting (xgboost)
-Unlike gradient boosting, **xgboost** uses regularization parameters to help prevent overfitting of the data. 
+Unlike gradient boosting, **xgboost** uses regularization parameters to help prevent overfitting of the data. We start with an arbitrary initial prediction, which could be the average of a given variable. Then, for every sample, we calculate the residuals by subtracting the predicted value from each actual value. We then use a linear scan by selecting thresholds between sets of points in order to decide the best split among a given feature variable. 
 
 ### Boston Housing Prices Dataset
 The Python code below shows how I set up the dataset's features and its target variable, **cmedv**, which marks the median house price. The features include variables for the average number of rooms in a house (**rooms**), the crime rate (**crime**), nitric oxide concentration in parts per 10 million (**nox**), the pupil-teacher ratio by town (**ptratio**), and the full-value property tax rate per $10,000 (**tax**).
@@ -42,7 +42,10 @@ yhat_lr = lr.predict(scale.transform(dat_test[:,:-1]))
 mae_lr = mean_absolute_error(dat_test[:,-1], yhat_lr)
 print("MAE Ridge Model = ${:,.2f}".format(1000*mae_lr))
 ```
+I then conducted tests to find the optimal values for alpha and mean absolute error for the Ridge and Lasso regressions, and in doing so, I created scatterplot for each regression, both of which are shown below. The optimal alpha values for the respective regressions are 0.43 and 0.13, and the optimal values for mean absolute error are $3,442.81 and $3,489.26.
+<img src="Assets/Housing Price Ridge Scatterplot.png" width="800" height="600" alt=hi class="inline"/>
 
+<img src="Assets/Housing Price Lasso Scatterplot.png" width="800" height="600" alt=hi class="inline"/>
 ### XGBoost on Boston Housing Prices Dataset
 ```Python
 
@@ -81,9 +84,31 @@ yhat_ls = ls.predict(scale.transform(dat_test[:,:-1]))
 mae_ls = mean_absolute_error(dat_test[:,-1], yhat_ls)
 print("MAE Lasso Model = ${:,.2f}".format(1000*mae_ls))
 ```
+After that, I used the same methods as with the Boston Housing Prices dataset to find optimal values for alpha and mean absolute error under the Ridge and Lasso regression methods. These respective optimal values for alpha are 0.06 and 0.19, and the optimal values for mean absolute error are $3,465.77
+<img src="Assets/Cars Scatterplot.png" width="800" height="600" alt=hi class="inline"/>
 
+<img src="Assets/Cars Lasso Scatterplot.png" width="800" height="600" alt=hi class="inline"/>
 ### XGBoost on Cars Dataset
-
+Using XGBoost on the dataset, I obtained a cross-validated mean square error value of 16.5594, compared to a slightly higher value of 16.7022 under the boosted LOWESS regression. Below is the code for the function to calculate this value.
 ```Python
+mse_blwr = []
 
+mse_xgb = []
+
+for i in range(5):
+  kf = KFold(n_splits=10,shuffle=True,random_state=i)
+  # this is the Cross-Validation Loop
+  for idxtrain, idxtest in kf.split(X):
+    xtrain = X[idxtrain]
+    ytrain = y[idxtrain]
+    ytest = y[idxtest]
+    xtest = X[idxtest]
+    xtrain = scale.fit_transform(xtrain)
+    xtest = scale.transform(xtest)
+    dat_train = np.concatenate([xtrain,ytrain.reshape(-1,1)],axis=1)
+    dat_test = np.concatenate([xtest,ytest.reshape(-1,1)],axis=1)
+    model_xgb = xgb.XGBRegressor(objective ='reg:squarederror',n_estimators=100,reg_lambda=20,alpha=1,gamma=10,max_depth=1)
+    model_xgb.fit(xtrain,ytrain)
+    yhat_xgb = model_xgb.predict(xtest)
+    mse_xgb.append(mse(ytest,yhat_xgb))
 ```
