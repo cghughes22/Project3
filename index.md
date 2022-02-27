@@ -78,14 +78,14 @@ X = np.array(df[features])
 y = np.array(df['MPG']).reshape(-1,1)
 dat = np.concatenate([X,y], axis=1)
 ```
-
+Similarly to the Boston dataset, I created training and testing sets, this time decreasing the size of the testing set to 25% of the original data, using the following code.
 ```Python
 from sklearn.metrics import mean_absolute_error
 dat_train, dat_test = tts(dat, test_size=0.25, random_state=1234)
 ```
 
 ### Multivariate Regression on Cars Dataset
-
+Like with the previous dataset, I started out by running a typical linear regression, obtaining a mean absolute error of 3,477.77.
 ```Python
 lm = LinearRegression()
 lm.fit(dat_train[:,:-1],dat_train[:,-1])
@@ -93,7 +93,7 @@ yhat_lm = lm.predict(dat_test[:,:-1])
 mae_lm = mean_absolute_error(dat_test[:,-1], yhat_lm)
 print("MAE Linear Model = ${:,.2f}".format(1000*mae_lm))
 ```
-I then ran repeated the process of running Ridge and Lasso regressions on the testing and training datasets, in which the values for mean absolute error are $3,477.03 and $3,474.79, respectively. Like with the Boston Housing Prices dataset, I also scaled the Cars data and ran the same Ridge and Lasso regressions, obtaining MAE values of $3,516.10 and $3,466.36, respectively. Displayed below is the code for the scaled Lasso regression of the Cars data.
+I then ran repeated the process of running Ridge and Lasso regressions on the testing and training datasets, in which the values for mean absolute error are 3,477.03 and 3,474.79, respectively. Like with the Boston Housing Prices dataset, I also scaled the Cars data and ran the same Ridge and Lasso regressions, obtaining MAE values of 3,516.10 and 3,466.36, respectively. Displayed below is the code for the scaled Lasso regression of the Cars data.
 ```Python
 scale = StandardScaler()
 ls = Lasso(alpha=0.15)
