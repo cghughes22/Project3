@@ -91,10 +91,9 @@ After that, I used the same methods as with the Boston Housing Prices dataset to
 ### XGBoost on Cars Dataset
 Using XGBoost on the dataset, I obtained a cross-validated mean square error value of 16.5594, compared to a slightly higher value of 16.7022 under the boosted LOWESS regression. Below is the code for the function to calculate this value.
 ```Python
+
 mse_blwr = []
-
 mse_xgb = []
-
 for i in range(5):
   kf = KFold(n_splits=10,shuffle=True,random_state=i)
   for idxtrain, idxtest in kf.split(X):
