@@ -46,9 +46,27 @@ I then conducted tests to find the optimal values for alpha and mean absolute er
 <img src="Assets/Housing Price Ridge Scatterplot.png" width="800" height="600" alt=hi class="inline"/>
 
 <img src="Assets/Housing Price Lasso Scatterplot.png" width="800" height="600" alt=hi class="inline"/>
-### XGBoost on Boston Housing Prices Dataset
-```Python
 
+### XGBoost on Boston Housing Prices Dataset
+
+```Python
+mse_blwr = []
+mse_xgb = []
+for i in range(5):
+  kf = KFold(n_splits=10,shuffle=True,random_state=i)
+  for idxtrain, idxtest in kf.split(X):
+    xtrain = X[idxtrain]
+    ytrain = y[idxtrain]
+    ytest = y[idxtest]
+    xtest = X[idxtest]
+    xtrain = scale.fit_transform(xtrain)
+    xtest = scale.transform(xtest)
+    dat_train = np.concatenate([xtrain,ytrain.reshape(-1,1)],axis=1)
+    dat_test = np.concatenate([xtest,ytest.reshape(-1,1)],axis=1)
+    model_xgb = xgb.XGBRegressor(objective ='reg:squarederror',n_estimators=100,reg_lambda=20,alpha=1,gamma=10,max_depth=1)
+    model_xgb.fit(xtrain,ytrain)
+    yhat_xgb = model_xgb.predict(xtest)
+    mse_xgb.append(mse(ytest,yhat_xgb))
 ```
 
 ### Cars Dataset
@@ -88,6 +106,7 @@ After that, I used the same methods as with the Boston Housing Prices dataset to
 <img src="Assets/Cars Ridge Scatterplot.png" width="800" height="600" alt=hi class="inline"/>
 
 <img src="Assets/Cars Lasso Scatterplot.png" width="800" height="600" alt=hi class="inline"/>
+
 ### XGBoost on Cars Dataset
 Using XGBoost on the dataset, I obtained a cross-validated mean square error value of 16.5594, compared to a slightly higher value of 16.7022 under the boosted LOWESS regression. Below is the code for the function to calculate this value.
 ```Python
