@@ -85,7 +85,7 @@ mae_ls = mean_absolute_error(dat_test[:,-1], yhat_ls)
 print("MAE Lasso Model = ${:,.2f}".format(1000*mae_ls))
 ```
 After that, I used the same methods as with the Boston Housing Prices dataset to find optimal values for alpha and mean absolute error under the Ridge and Lasso regression methods. These respective optimal values for alpha are 0.06 and 0.19, and the optimal values for mean absolute error are $3,465.77
-<img src="Assets/Cars Scatterplot.png" width="800" height="600" alt=hi class="inline"/>
+<img src="Assets/Cars Ridge Scatterplot.png" width="800" height="600" alt=hi class="inline"/>
 
 <img src="Assets/Cars Lasso Scatterplot.png" width="800" height="600" alt=hi class="inline"/>
 ### XGBoost on Cars Dataset
@@ -97,7 +97,6 @@ mse_xgb = []
 
 for i in range(5):
   kf = KFold(n_splits=10,shuffle=True,random_state=i)
-  # this is the Cross-Validation Loop
   for idxtrain, idxtest in kf.split(X):
     xtrain = X[idxtrain]
     ytrain = y[idxtrain]
