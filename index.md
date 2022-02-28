@@ -1,7 +1,7 @@
 ## Multivariate Regression Analysis and Gradient Boosting
 
 ### Multivariate Regression
-In order to perform multivariate regression, we need to take a dataset and only use the features that we find to be important for our model. 
+In order to perform multivariate regression, we need to take a dataset and only use the features that we find to be important for our model. Instead of using one single feature and performing a regression, we use multiple, and sometimes several, features. In order to figure out which features are important for the purposes of our model, we can perform regularization on the variables of the dataset to figure out correlation among the features and the target variable. After finding out coefficients, then we can extract the important features from the dataset, and start to perform different regressions on them. 
 ### Gradient Boosting
 Gradient boosting utilizes a set of decision trees, each with a depth larger than 1, to predict a target label. Usually, these trees have their maximum number of leaves set between 8 and 32. We start off by calculating the average value of the target variable. Afterwards, we calculate the residuals by subtracting the predicted values from the actual values, constructing a decision tree with residual predictions in the process. We then predict the actual target variable using the values found in the decision tree, and compute new residuals. We repeat this process until reaching the value of the hyperparameter, and make a final prediction for the value of the target variable.
 ### Extreme Gradient Boosting (xgboost)
